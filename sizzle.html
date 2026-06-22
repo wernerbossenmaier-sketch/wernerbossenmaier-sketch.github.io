@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MARTA — mood teaser</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root{--ink:#0c0c0c;--pink:#EC0E8A}
+  *{box-sizing:border-box;margin:0;padding:0;font-family:Montserrat,-apple-system,system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+  body{background:#000;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:18px 12px}
+  .lab{color:#8a8a8a;font-size:11.5px;letter-spacing:.4px;text-align:center}
+  .lab b{color:#fff}
+  .stage{position:relative;width:min(94vw,420px);aspect-ratio:9/16;max-height:84vh;background:#000;border-radius:26px;overflow:hidden;box-shadow:0 24px 80px rgba(236,14,138,.18),0 0 0 1px #1a1a1a}
+  .scene{position:absolute;inset:0;opacity:0;pointer-events:none;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+  .scene.on{opacity:1;pointer-events:auto}
+  .scene .bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .scene.on .bgimg{animation:kb 3s ease-out both}
+  @keyframes kb{from{transform:scale(1.16)}to{transform:scale(1)}}
+  .scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.82),rgba(0,0,0,.15) 55%,rgba(0,0,0,.35))}
+  .wrap{position:relative;padding:26px 24px 56px}
+  .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--pink);margin-bottom:10px}
+  .h{color:#fff;font-weight:900;line-height:.98;letter-spacing:-.01em;text-transform:uppercase;font-size:clamp(30px,9vw,46px)}
+  .h .pk{color:var(--pink)}
+  .sub{color:#e7e7e7;font-weight:600;font-size:14px;margin-top:12px;max-width:84%}
+  /* statement scenes (solid bg, centered) */
+  .scene.stmt{justify-content:center;align-items:flex-start}
+  .scene.stmt.black{background:#0c0c0c}.scene.stmt.pink{background:var(--pink)}
+  .scene.stmt .wrap{padding:26px 24px}
+  .scene.stmt .h{font-size:clamp(34px,10vw,52px)}
+  .scene.pink .h{color:#fff}.scene.pink .h .pk{color:#0c0c0c}
+  .scene.pink .eyebrow{color:#16060f}
+  /* logo scenes */
+  .scene.logo{justify-content:center;align-items:center;background:#0c0c0c;text-align:center}
+  .scene.on .pop{animation:pop .6s cubic-bezier(.2,1.3,.4,1) both}
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .wm{color:#fff;font-weight:900;letter-spacing:.2em;font-size:34px;margin-top:14px}
+  .tag{color:#9a9a9a;font-weight:600;font-size:13px;margin-top:10px}
+  .tag .pk{color:var(--pink)}
+  .url{color:#7a7a7a;font-weight:600;font-size:12px;margin-top:6px}
+  /* kinetic text rise on show */
+  .scene.on .ln{animation:rise .55s cubic-bezier(.22,1,.36,1) both}
+  .scene.on .ln:nth-child(2){animation-delay:.08s}
+  .scene.on .ln:nth-child(3){animation-delay:.16s}
+  .scene.on .eyebrow,.scene.on .sub{animation:rise .5s .1s ease both}
+  @keyframes rise{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+  .ln{display:block}
+  /* progress + flash */
+  .prog{position:absolute;top:9px;left:12px;right:12px;display:flex;gap:3px;z-index:30}
+  .prog i{flex:1;height:2.5px;border-radius:3px;background:rgba(255,255,255,.28);overflow:hidden}
+  .prog i span{display:block;height:100%;width:0;background:#fff}
+  .flash{position:absolute;inset:0;background:var(--pink);opacity:0;z-index:25;pointer-events:none}
+  .flash.go{animation:fl .34s ease}
+  @keyframes fl{0%{opacity:0}30%{opacity:.92}100%{opacity:0}}
+  .replay{position:absolute;right:12px;bottom:12px;z-index:40;background:rgba(255,255,255,.16);color:#fff;border:none;border-radius:30px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:none}
+  .audio{position:absolute;left:12px;bottom:12px;z-index:40;color:#bdbdbd;font-size:10.5px;font-weight:600}
+</style>
+</head>
+<body>
+  <div class="lab"><b>MARTA — mood teaser</b><br>auto-plays · ~26s loop · add a track in the edit</div>
+  <div class="stage">
+    <div class="prog" id="prog"></div>
+    <div class="flash" id="flash"></div>
+
+    <!-- 1 logo -->
+    <section class="scene logo" data-dur="2400">
+      <div class="pop">
+        <svg width="74" height="74" viewBox="0 0 32 32" aria-label="MARTA"><rect width="32" height="32" rx="8" fill="#fff"/><path fill="#0c0c0c" d="M5.919 25V8.2h4.656l6.72 10.968h-2.448L21.375 8.2h4.656l.048 16.8h-5.16l-.048-9.024h.816l-4.464 7.512h-2.496l-4.656-7.512h1.008V25h-5.16Z"/></svg>
+        <div class="wm">MARTA</div>
+        <div class="tag">circular fashion, <span class="pk">with feeling</span></div>
+      </div>
+    </section>
+
+    <!-- 2 statement -->
+    <section class="scene stmt pink" data-dur="2400">
+      <div class="wrap"><div class="eyebrow">the idea</div>
+        <div class="h"><span class="ln">Fashion's</span><span class="ln">too good to</span><span class="ln">throw away.</span></div>
+      </div>
+    </section>
+
+    <!-- 3 festival -->
+    <section class="scene" data-dur="2600">
+      <img class="bgimg" src="/popups/frauenfeld.jpg" alt="" />
+      <div class="scrim"></div>
+      <div class="wrap"><div class="eyebrow">♥ the energy</div>
+        <div class="h"><span class="ln">This is</span><span class="ln"><span class="pk">MARTA.</span></span></div>
+        <div class="sub">Pop-ups, drops, the whole city in on it.</div>
+      </div>
+    </section>
+
+    <!-- 4 store -->
+    <section class="scene" data-dur="2500">
+      <img class="bgimg" src="/brand/counter.jpg" alt="" />
+      <div class="scrim"></div>
+      <div class="wrap"><div class="h"><span class="ln">A shop your</span><span class="ln">city runs.</span></div></div>
+    </section>
+
+    <!-- 5 statement -->
+    <section class="scene stmt black" data-dur="2700">
+      <div class="wrap"><div class="eyebrow">how it works</div>
+        <div class="h"><span class="ln">Rent a shelf.</span><span class="ln"><span class="pk">Sell</span> your closet.</span><span class="ln">Shop your city.</span></div>
+      </div>
+    </section>
+
+    <!-- 6 garment -->
+    <section class="scene" data-dur="2400">
+      <img class="bgimg" src="/items/bomber.jpg" alt="" />
+      <div class="scrim"></div>
+      <div class="wrap"><div class="h"><span class="ln">Pre-loved.</span><span class="ln"><span class="pk">Not</span> pre-owned.</span></div></div>
+    </section>
+
+    <!-- 7 member / AI -->
+    <section class="scene" data-dur="2600">
+      <img class="bgimg" src="/brand/member-hero.jpg" alt="" />
+      <div class="scrim"></div>
+      <div class="wrap"><div class="eyebrow">your bestie</div>
+        <div class="h"><span class="ln">She knows</span><span class="ln">your taste.</span></div>
+        <div class="sub">An AI stylist that works your local rails — and holds your match.</div>
+      </div>
+    </section>
+
+    <!-- 8 statement community -->
+    <section class="scene stmt pink" data-dur="2400">
+      <div class="wrap"><div class="eyebrow">the model</div>
+        <div class="h"><span class="ln">Owned by the</span><span class="ln">community.</span><span class="ln"><span class="pk">Powered by you.</span></span></div>
+      </div>
+    </section>
+
+    <!-- 9 expansion -->
+    <section class="scene" data-dur="2600">
+      <img class="bgimg" src="/community/marais.jpg" alt="" />
+      <div class="scrim"></div>
+      <div class="wrap"><div class="eyebrow">city by city</div>
+        <div class="h"><span class="ln">Zürich.</span><span class="ln">Paris.</span><span class="ln"><span class="pk">Your city next.</span></span></div>
+      </div>
+    </section>
+
+    <!-- 10 close -->
+    <section class="scene logo" data-dur="3000">
+      <div class="pop">
+        <svg width="58" height="58" viewBox="0 0 32 32" aria-label="MARTA"><rect width="32" height="32" rx="8" fill="#fff"/><path fill="#0c0c0c" d="M5.919 25V8.2h4.656l6.72 10.968h-2.448L21.375 8.2h4.656l.048 16.8h-5.16l-.048-9.024h.816l-4.464 7.512h-2.496l-4.656-7.512h1.008V25h-5.16Z"/></svg>
+        <div class="wm">MARTA</div>
+        <div class="tag">wear it <span class="pk">forward.</span></div>
+        <div class="url">martacircular.com</div>
+      </div>
+    </section>
+
+    <button class="replay" id="replay">↻ Replay</button>
+    <div class="audio">♪ add your track</div>
+  </div>
+
+<script>
+  var scenes = Array.prototype.slice.call(document.querySelectorAll('.scene'));
+  var prog = document.getElementById('prog'), flash = document.getElementById('flash'), replay = document.getElementById('replay');
+  scenes.forEach(function(){ var i=document.createElement('i'); i.innerHTML='<span></span>'; prog.appendChild(i); });
+  var bars = Array.prototype.slice.call(prog.querySelectorAll('span'));
+  var idx = -1, timer = null;
+  function show(i){
+    if(scenes[idx]) scenes[idx].classList.remove('on');
+    idx = i;
+    var s = scenes[idx], dur = +s.dataset.dur || 2400;
+    s.classList.add('on');
+    flash.classList.remove('go'); void flash.offsetWidth; flash.classList.add('go');
+    bars.forEach(function(b,n){ b.style.transition='none'; b.style.width = n<idx?'100%':'0'; });
+    void s.offsetWidth;
+    bars[idx].style.transition = 'width '+dur+'ms linear'; bars[idx].style.width='100%';
+    clearTimeout(timer);
+    timer = setTimeout(function(){
+      if(idx>=scenes.length-1){ replay.style.display='block'; return; }
+      show(idx+1);
+    }, dur);
+  }
+  function play(){ replay.style.display='none'; show(0); }
+  replay.addEventListener('click', play);
+  play();
+</script>
+</body>
+</html>
